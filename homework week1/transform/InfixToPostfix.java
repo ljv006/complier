@@ -9,6 +9,7 @@ public class InfixToPostfix
 	{
 		Stack<Character> s = new Stack<Character>();
 		String str = "";
+		//to scan the input string
 		for (int i = 0; i < expression.length(); i++) {
 			char c = expression.charAt(i);
 				//left bracket
@@ -20,7 +21,7 @@ public class InfixToPostfix
 					//so they should be output earlier than + and -
 					str += ' ';
 					if (!s.empty() && (s.peek() == '*' || s.peek() == '/')) {
-						while (!s.empty()) {
+						while (!s.empty() && s.peek() != '(') {
 							str += s.peek();
 							str += ' ';
 							s.pop();
@@ -37,18 +38,19 @@ public class InfixToPostfix
 				}
 				//right bracket
 				else if (c == ')') {
-					while (s.peek() != '(') {
+					while (!s.empty() && s.peek() != '(') {
 						str += ' ';
 						str += s.peek();
 						s.pop();
 					}
-					s.pop();
+					if (!s.empty() && s.peek() == '(')
+						s.pop();
 				}
 				else {
 					str += c;
 				}
 		}
-		//to output all of the operators in the stack
+		//to output all of the operators still in the stack
 		while (!s.empty()) {
 			str += ' ';
 			str += s.peek();
@@ -59,9 +61,13 @@ public class InfixToPostfix
 	public static void main(String[] args)
 	{
 		InfixToPostfix trans = new InfixToPostfix();
+		//to get the string from the scanner
 		Scanner s = new Scanner(System.in);
-		String temp = s.nextLine();
-		String res = trans.convertExpr(temp);
-		System.out.println(res);
+		//to judge whether the input is over
+		while (s.hasNextLine()) {
+			String temp = s.nextLine();
+			String res = trans.convertExpr(temp);
+			System.out.println(res);
+		}
 	} 
 } 
